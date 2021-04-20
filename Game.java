@@ -17,18 +17,29 @@ public class Game implements ActionListener{
 
 
 
-//declares a buttons for: submitting, continuing, 
-JButton btnSubmit;
-JButton btnNext;
-JButton btnName;
-JButton btnExit;
+//declares a buttons for: submitting, continuing, entering name, and exeting the program 
+JButton btnSubmit, btnNext, btnName, btnExit;
+
+//declares variables for the answers as a set of radio buttons
 JRadioButton btnAnswer1; 
 JRadioButton btnAnswer2; 
 JRadioButton btnAnswer3; 
 JRadioButton btnAnswer4; 
-JLabel lblName, lblWelcome, lblPrompt, lblResponse, lblTotalScore;
+
+//declares labels
+JLabel lblName; 
+JLabel lblWelcome;
+JLabel lblPrompt;
+JLabel lblResponse;
+JLabel lblTotalScore;
+
+//declares text field for entering name
 JTextField nameField;
+
+//declares button group for radio buttons
 ButtonGroup group;
+
+//declares labels to be used later in formatting
 JPanel pnl1;
 JPanel pnl2;
 JPanel pnl3;
@@ -36,7 +47,7 @@ JPanel pnlOuter;
 
 
 
-  
+ //declares score integer to track score 
 int intScore;
 
 //This is the declaration and initialization of the questions ArrayList
@@ -47,6 +58,7 @@ This Game method reads the data from the trivia.txt to create the game.The metho
 */
 Game(){
 
+//initializes score variable
 intScore =0; 
 
 
@@ -133,13 +145,13 @@ JPanel pnl1 = new JPanel(new FlowLayout());
 pnl1.setPreferredSize(new Dimension(700,100));
 pnl1.setBackground(Color.GRAY);
 JPanel pnl2 = new JPanel();
-pnl2.setPreferredSize(new Dimension(500,30));
+pnl2.setPreferredSize(new Dimension(500,50));
 pnl2.setBackground(Color.GRAY);
 JPanel pnl3 = new JPanel();
 pnl3.setPreferredSize(new Dimension(500,30));
 pnl3.setBackground(Color.GRAY);
 
-
+//adds panels to an outer
 JPanel pnlOuter = new JPanel(new BorderLayout());
  pnlOuter.add(pnl1, BorderLayout.NORTH);
  pnlOuter.add(pnl2,  BorderLayout.CENTER);
@@ -210,13 +222,12 @@ lblTotalScore = new JLabel("Total Points: " + intScore);
 lblTotalScore.setFont(new Font("Monospaced", Font.ITALIC, 20));
 lblTotalScore.setForeground(Color.GREEN);
 
-JLabel html = new JLabel("<html><br><br>I am <font color='red' size='30'>blue</font></html>");
-
 lblPrompt = new JLabel(triviaQuestions.get(0).getQuestion());
 lblPrompt.setForeground(Color.WHITE);
 
 lblResponse = new JLabel("");
-lblResponse.setForeground(Color.ORANGE);
+
+lblResponse.setForeground(Color.RED);
 
 pnl1.add(lblName);
 pnl2.add(nameField);
@@ -254,7 +265,6 @@ int i = 0;
 *This uses a loop to bring up the next trivia question and resets the buttons for the corresponding answer choices. When there are no more questions the game is then over
 */
 void NextQuestion(){
-  if (i < triviaQuestions.size()) {
    
     lblPrompt.setText("");
     btnAnswer1.setText("");
@@ -262,8 +272,7 @@ void NextQuestion(){
     btnAnswer3.setText("");
     btnAnswer4.setText("");
     lblResponse.setText("");
-    
-    i++;
+
 
     lblPrompt.setText(triviaQuestions.get(i).getQuestion());
     btnAnswer1.setText(triviaQuestions.get(i).getAnswer1());
@@ -278,25 +287,13 @@ void NextQuestion(){
     System.out.println(triviaQuestions.get(i).getAnswer4());
 
     btnSubmit.setVisible(true);
-  }
 
-//if there are no more questions the game is over
-  else {
-      lblWelcome.setText("GAME OVER");
-      lblWelcome.setVisible(true);
-      lblPrompt.setVisible(false);
-      btnAnswer1.setVisible(false);
-      btnAnswer2.setVisible(false);
-      btnAnswer3.setVisible(false);
-      btnAnswer4.setVisible(false);
-      lblResponse.setVisible(false);
-      btnSubmit.setVisible(false);
-      btnNext.setVisible(false);
-      btnExit.setVisible(false);
+    
+  
 
   }
 
-}
+
 /*
 this give the buttons functionality and determines whether or not the player has selected the correct answer, if the corrrect answer is selected the user gets points added to their score.
 */
@@ -326,6 +323,7 @@ public void actionPerformed(ActionEvent ae)
           lblResponse.setText("Correct! You earned 2 Points");
           intScore += triviaQuestions.get(i).getPoints();
           btnSubmit.setVisible(false);
+          btnNext.setVisible(true);
   
       }
 
@@ -335,6 +333,7 @@ public void actionPerformed(ActionEvent ae)
           lblResponse.setText("Correct! You earned 2 Points");
           intScore += triviaQuestions.get(i).getPoints();
           btnSubmit.setVisible(false);
+          btnNext.setVisible(true);
           
         }
 
@@ -343,11 +342,12 @@ public void actionPerformed(ActionEvent ae)
           lblResponse.setText("Correct! You earned 2 Points");
           intScore += triviaQuestions.get(i).getPoints();
           btnSubmit.setVisible(false);
+          btnNext.setVisible(true);
         }
 
         else 
         {
-          lblResponse.setText("incorrect.");
+          lblResponse.setText("Incorrect.");
           btnSubmit.setVisible(false);
           btnNext.setVisible(true);
         } 
@@ -359,14 +359,32 @@ public void actionPerformed(ActionEvent ae)
 
   else if (ae.getActionCommand().equals("Continue"))
   {
+    i++;
+    if(i < triviaQuestions.size()){
+    
     btnNext.setVisible(false);
     group.clearSelection();
-       
+
      
      NextQuestion();
      triviaQuestions.get(i).getAnswerWin();
+
+
      triviaQuestions.get(i).getPoints();
-    
+    }
+    else{
+      lblWelcome.setText("GAME OVER");
+      lblWelcome.setVisible(true);
+      lblPrompt.setVisible(false);
+      btnAnswer1.setVisible(false);
+      btnAnswer2.setVisible(false);
+      btnAnswer3.setVisible(false);
+      btnAnswer4.setVisible(false);
+      lblResponse.setVisible(false);
+      btnSubmit.setVisible(false);
+      btnNext.setVisible(false);
+      btnExit.setVisible(false);
+    }
    }
 //This actions allows user to enter the game
 else if (ae.getActionCommand().equals("Submit Name")) 
@@ -375,7 +393,7 @@ else if (ae.getActionCommand().equals("Submit Name"))
 
     String userName = nameField.getText();
     lblWelcome.setText("Welcome " + userName + " to the Slogan Guessing Game!");
-
+    NextQuestion();
     lblName.setVisible(false);
     nameField.setVisible(false);
     btnName.setVisible(false);
